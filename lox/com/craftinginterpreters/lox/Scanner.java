@@ -72,7 +72,10 @@ class Scanner {
             case '<': addToken(match('=') ? LESS_EQUAL : LESS); break;
             case '>': addToken(match('=') ? GREATER_EQUAL : GREATER); break;
             case '/':
-                      if(match('/')) {
+                      if(match('*')) {
+                          blockComment();
+                      }
+                      else if(match('/')) {
                           while(peek() != '\n' && !isAtEnd()) advance();
                       }
                       else {
@@ -103,6 +106,20 @@ class Scanner {
                     Lox.error(line, "Unexpected character.");
                 }
                 break;
+        }
+    }
+
+    private void blockComment() {
+        int depth = 1;
+        while(!isAtEnd() && depth > 0) {
+            if(match('/') && match('*')) {
+                depth++;
+            }
+
+            if(match('*') && match('/')) {
+                depth--;
+            }
+            advance();
         }
     }
 
