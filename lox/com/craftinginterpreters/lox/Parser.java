@@ -24,7 +24,36 @@ class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        Expr expr = ternary();
+
+        while(match(COMMA)) {
+            Token operator = previous();
+            Expr right = ternary();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if(match(QUESTION)) {
+            if(match(COLON)) { //a ?: b
+                Expr right = ternary();
+                expr = new Expr.Ternary(expr, null, right);
+            }
+            else { // a ? b : c
+                Expr middle = ternary(); 
+                if(!match(COLON)) {
+                    throw error(peek(), "Expect expression after '?'");
+                }
+                Expr right = ternary();
+                expr = new Expr.Ternary(expr, middle, right);
+            }
+        }
+
+        return expr;
     }
 
     // returns a syntax tree for equality grammar rule

@@ -65,6 +65,8 @@ class Scanner {
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+            case '?': addToken(QUESTION); break;
+            case ':': addToken(COLON); break;
 
             // possible 2-character lexemes
             case '!': addToken(match('=') ? BANG_EQUAL : BANG); break;
