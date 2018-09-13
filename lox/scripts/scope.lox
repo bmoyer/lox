@@ -1,0 +1,15 @@
+// this is a comment
+/*
+block comment
+*/
+var a = "global a";
+print a;
+{
+    var a = "inner a";
+    print a;
+    {
+        var a = "innermost a";
+        print a;
+    }
+}
+print a;

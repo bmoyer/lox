@@ -19,9 +19,6 @@
 *.tar.gz
 *.rar
 
-# Lox files
-*.lox
-
 # vim junk
 *.un~
 
