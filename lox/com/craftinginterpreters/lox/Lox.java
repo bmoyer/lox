@@ -37,7 +37,22 @@ public class Lox {
 
         for(;;) {
             System.out.print("> ");
-            run(reader.readLine());
+            Scanner scanner = new Scanner(reader.readLine());
+            List<Token> tokens = scanner.scanTokens();
+
+            Parser parser = new Parser(tokens);
+            List<Stmt> statements = parser.parse();
+
+            for(Stmt s : statements) {
+                if (s instanceof Stmt.Expression) {
+                    Object o = interpreter.evaluate(((Stmt.Expression)s).expression);
+                    System.out.println(o.toString());
+                }
+                else {
+                    interpreter.execute(s);
+                }
+            }
+
             hadError = false;
         }
     }
