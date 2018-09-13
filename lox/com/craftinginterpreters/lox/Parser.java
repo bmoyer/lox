@@ -26,11 +26,11 @@ class Parser {
     }
 
     private Expr expression() {
-        Expr expr = ternary();
+        Expr expr = assignment();
 
         while(match(COMMA)) {
             Token operator = previous();
-            Expr right = ternary();
+            Expr right = assignment();
             expr = new Expr.Binary(expr, operator, right);
         }
 
@@ -77,6 +77,25 @@ class Parser {
         Expr expr = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr); // simply wraps an Expr in a Stmt
+    }
+
+    private Expr assignment() {
+        Expr expr = ternary();
+
+        // parse lhs as if it were an expression, then produce tree that turns it into assign target
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name; // rval expr node -> lval representation
+                return new Expr.Assign(name, value);
+            }
+
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     private Expr ternary() {
