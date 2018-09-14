@@ -18,6 +18,7 @@ public class GenerateAst {
                     "Ternary  : Expr left, Expr middle, Expr right",
                     "Grouping : Expr expression",
                     "Literal  : Object value",
+                    "Logical  : Expr left, Token operator, Expr right", // 'and', 'or', etc
                     "Unary    : Token operator, Expr right",
                     "Variable : Token name" // wrapper around var name token
                     ));
@@ -25,8 +26,10 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt", Arrays.asList(
                     "Block      : List<Stmt> statements",
                     "Expression : Expr expression",
+                    "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                     "Print      : Expr expression",
-                    "Var        : Token name, Expr initializer"
+                    "Var        : Token name, Expr initializer",
+                    "While      : Expr condition, Stmt body"
                     ));
     }
 
