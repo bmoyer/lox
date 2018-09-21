@@ -60,13 +60,14 @@ public class Lox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-
         Parser parser = new Parser(tokens);
+
         List<Stmt> statements = parser.parse();
-        
         if (hadError) return;
 
-        //System.out.println(new AstPrinter().print(expression));
+        new Resolver(interpreter).resolve(statements);
+        if (hadError) return;
+
         interpreter.interpret(statements);
     }
 
