@@ -1,0 +1,13 @@
+class DevonshireCream {
+  serveOn() {
+    return "Scones";
+  }
+}
+
+print DevonshireCream; // Prints "DevonshireCream".
+
+var dvc = DevonshireCream();
+dvc.x = 42;
+dvc.y = 18;
+print dvc.x + dvc.y;
+print dvc.serveOn();
