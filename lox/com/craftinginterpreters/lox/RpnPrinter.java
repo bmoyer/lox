@@ -2,6 +2,11 @@ package com.craftinginterpreters.lox;
 
 // Creates an unambiguous string representation of AST nodes
 class RpnPrinter implements Expr.Visitor<String> {
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return null;
+    }
+
     String print(Expr expr) {
         return expr.accept(this);
     }

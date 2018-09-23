@@ -16,7 +16,7 @@ public class LoxClass implements LoxCallable {
 
     LoxFunction findMethod(LoxInstance instance, String name) {
         if (methods.containsKey(name)) {
-            return methods.get(name);
+            return methods.get(name).bind(instance);
         }
         return null;
     }
@@ -24,12 +24,17 @@ public class LoxClass implements LoxCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         LoxInstance instance = new LoxInstance(this);
+        LoxFunction initializer = methods.get("init");
+        if(initializer != null) {
+            initializer.bind(instance).call(interpreter, arguments); // bound/invoked like a normal method call
+        }
         return instance;
     }
 
     @Override
     public int arity() {
-        return 0;
+        LoxFunction initializer = methods.get("init");
+        return (initializer == null) ? 0 : initializer.arity();
     }
 
     @Override

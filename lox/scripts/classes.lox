@@ -1,13 +1,23 @@
-class DevonshireCream {
-  serveOn() {
-    return "Scones";
+class Cake {
+
+  init(type, flavor) {
+    this.type = type;
+    this.flavor = flavor;
+    print "Baked a " + this.flavor + " " + this.type + " cake";
+  }
+
+  taste() {
+    var adjective = "delicious";
+    print "The " + this.flavor + " " + this.type + " cake is " + adjective + "!";
+  }
+
+  add_butter() {
+    print "Added butter.";
+    this.flavor = "Buttery " + this.flavor;
   }
 }
 
-print DevonshireCream; // Prints "DevonshireCream".
-
-var dvc = DevonshireCream();
-dvc.x = 42;
-dvc.y = 18;
-print dvc.x + dvc.y;
-print dvc.serveOn();
+var cake = Cake("Bundt", "Mexican Chocolate");
+cake.taste();
+cake.add_butter();
+cake.taste();
