@@ -1,0 +1,23 @@
+class Cake {
+
+  init(type, flavor) {
+    this.type = type;
+    this.flavor = flavor;
+    print "Baked a " + this.flavor + " " + this.type + " cake";
+  }
+
+  taste() {
+    var adjective = "delicious";
+    print "The " + this.flavor + " " + this.type + " cake is " + adjective + "!";
+  }
+
+  add_butter() {
+    print "Added butter.";
+    this.flavor = "Buttery " + this.flavor;
+  }
+}
+
+var cake = Cake("Bundt", "Mexican Chocolate");
+cake.taste();
+cake.add_butter();
+cake.taste();

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0`
+find -name "*.class" | xargs rm
+pushd ./com/craftinginterpreters/lox/
+javac *.java
+popd
+pushd

@@ -12,6 +12,11 @@ class RpnPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitSuperExpr(Expr.Super expr) {
+        return null;
+    }
+
+    @Override
     public String visitCallExpr(Expr.Call expr) {
         return "<call>";
     }

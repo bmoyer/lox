@@ -15,6 +15,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private enum ClassType {
         CLASS,
+        SUBCLASS,
         NONE
     }
 
@@ -64,11 +65,21 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         currentClass = ClassType.CLASS;
         declare(stmt.name);
 
+        if(stmt.superclass != null) {
+            currentClass = ClassType.SUBCLASS;
+            resolve(stmt.superclass);
+        }
+
+        define(stmt.name);
+
+        if (stmt.superclass != null) {
+            beginScope(); // create a new scope surrounding the class' methods in which 'super' is defined
+            scopes.peek().put("super", true);
+        }
+
         // before resolving methods, create new scope & define "this" like a var
         beginScope();
         scopes.peek().put("this", true);
-
-        define(stmt.name);
 
         for(Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
@@ -78,6 +89,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             resolveFunction(method, declaration);
         }
         endScope(); // discard new scope with 'this' after resolving methods
+        if (stmt.superclass != null) endScope();
         currentClass = enclosingClass;
         return null;
     }
@@ -205,6 +217,18 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitSetExpr(Expr.Set expr) {
         resolve(expr.value);
         resolve(expr.object); // property itself is dynamically evaluated, as with Expr.Get
+        return null;
+    }
+
+    @Override
+    public Void visitSuperExpr(Expr.Super expr) {
+        if (currentClass == ClassType.NONE) {
+            Lox.error(expr.keyword, "Cannot use 'super' outside of a class.");
+        }
+        else if (currentClass != ClassType.SUBCLASS) {
+            Lox.error(expr.keyword, "Cannot use 'super' in a class with no superclass.");
+        }
+        resolveLocal(expr, expr.keyword); // resolve super token as if it were a variable
         return null;
     }
 
